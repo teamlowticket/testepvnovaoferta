@@ -5,31 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workshop Receita Recorrente - Domine o Steadyflow</title>
     
-    <!-- Fonts, Icons, Tailwind (mesmo do original) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Mesmo config Tailwind e styles do seu HTML original (mantive tudo para não quebrar o design cyberpunk) -->
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Config -->
     <script>
-        tailwind.config = { /* ... mesmo do seu código original ... */ }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            lime: '#CCFF00',      // High Voltage Lime
+                            limeDim: '#9ACD32',
+                            olive: '#3A4A1F',
+                            darkOlive: '#1a220d',
+                            glass: 'rgba(255, 255, 255, 0.03)',
+                        },
+                        dark: {
+                            base: '#030303',      // Deepest Black
+                            surface: '#0A0A0A',   // Slightly Lighter
+                            highlight: '#141414',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'marquee': 'marquee 40s linear infinite',
+                        'blink': 'blink 1s steps(2) infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out 4s infinite',
+                        'scan': 'scan 3s linear infinite',
+                        'grid-move': 'gridMove 20s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        },
+                        blink: {
+                            '0%': { opacity: '1' },
+                            '100%': { opacity: '0' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-20px) scale(1.05)' },
+                        },
+                        scan: {
+                            '0%': { top: '0%', opacity: 0 },
+                            '10%': { opacity: 1 },
+                            '90%': { opacity: 1 },
+                            '100%': { top: '100%', opacity: 0 },
+                        },
+                        gridMove: {
+                            '0%': { transform: 'translateY(0)' },
+                            '100%': { transform: 'translateY(40px)' },
+                        }
+                    }
+                }
+            }
+        }
     </script>
+
     <style>
-        /* ... todo o <style> do seu HTML original colado aqui ... */
-        /* Mantive 100% igual para preservar o visual */
+        body {
+            background-color: #030303;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* DYNAMIC BACKGROUND LAYERS */
+        .tech-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 200%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: top;
+            pointer-events: none;
+            z-index: 0;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
+            animation: gridMove 20s linear infinite;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 50;
+            mix-blend-mode: overlay;
+        }
+
+        /* FLOATING ORBS */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* HOLOGRAPHIC CARD */
+        .holo-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02);
+            transition: all 0.4s ease;
+        }
+        .holo-card:hover {
+            border-color: rgba(204, 255, 0, 0.3);
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        /* RETICLE CORNERS (Camera Effect) */
+        .reticle-tl, .reticle-tr, .reticle-bl, .reticle-br {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: rgba(204, 255, 0, 0.7);
+            pointer-events: none;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+        .group:hover .reticle-tl { top: 5px; left: 5px; }
+        .group:hover .reticle-tr { top: 5px; right: 5px; }
+        .group:hover .reticle-bl { bottom: 5px; left: 5px; }
+        .group:hover .reticle-br { bottom: 5px; right: 5px; }
+        
+        .reticle-tl { top: 15px; left: 15px; border-top: 2px solid; border-left: 2px solid; }
+        .reticle-tr { top: 15px; right: 15px; border-top: 2px solid; border-right: 2px solid; }
+        .reticle-bl { bottom: 15px; left: 15px; border-bottom: 2px solid; border-left: 2px solid; }
+        .reticle-br { bottom: 15px; right: 15px; border-bottom: 2px solid; border-right: 2px solid; }
+
+        /* SCAN LINE */
+        .scan-line {
+            position: absolute;
+            left: 0; width: 100%; height: 2px;
+            background: #CCFF00;
+            box-shadow: 0 0 10px #CCFF00;
+            z-index: 15;
+            opacity: 0.5;
+        }
+
+        /* UTILITIES */
+        ::selection { background-color: #CCFF00; color: #000; }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="antialiased font-sans selection:bg-brand-lime selection:text-black">
 
-    <!-- ATMOSPHERE (mesmo do original) -->
+    <!-- ATMOSPHERE -->
     <div class="tech-grid"></div>
     <div class="noise-overlay"></div>
+    
+    <!-- Floating Ambient Orbs (Position Adjusted) -->
     <div class="orb bg-brand-lime w-[500px] h-[500px] top-[-100px] left-[-100px] animate-float opacity-[0.08]"></div>
     <div class="orb bg-brand-olive w-[600px] h-[600px] bottom-[20%] right-[-150px] animate-float-delayed opacity-[0.08]"></div>
 
-    <!-- TOP NOTIFICATION BAR com countdown dinâmico -->
+    <!-- TOP NOTIFICATION BAR -->
     <div class="bg-dark-base border-b border-white/5 relative z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-center text-center">
             <div class="flex flex-col md:flex-row items-center justify-center gap-2 text-[10px] md:text-xs font-mono tracking-wide text-gray-400 leading-tight">
@@ -41,80 +203,395 @@
                     <strong class="text-brand-lime uppercase">ATENÇÃO:</strong>
                 </div>
                 <span>A CALL EXCLUSIVA PARA INFOPRODUTORES, EMPRESÁRIOS DIGITAIS OU PROFISSIONAIS ESPECIALISTAS COMEÇA EM:</span>
-                <span id="top-countdown" class="text-brand-lime font-bold tabular-nums">00d 00h 00m 00s</span>
+                <div id="top-countdown" class="text-xl md:text-3xl font-mono font-bold text-brand-lime tabular-nums tracking-widest drop-shadow-[0_0_15px_rgba(204,255,0,0.2)]">
+                    00d 00h 00m 00s
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- HERO SECTION (copy exato) -->
+    <!-- 1. HERO SECTION -->
     <header class="relative pt-8 pb-20 md:pb-32 px-4 overflow-hidden z-10">
         <div class="relative max-w-6xl mx-auto w-full flex flex-col items-center text-center">
             
-            <!-- IMG PROFISSIONAL -->
-            <div class="mb-12 w-full max-w-3xl mx-auto">
-                <img src="SUA_IMAGEM_KAUE_SLENDER_JUNTOS_AQUI.jpg" alt="Kauê + Slender" class="rounded-2xl shadow-2xl">
-            </div>
-
-            <!-- Headline -->
-            <h1 class="font-display font-black text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-white">
-                Domine o Jogo do Steadyflow:<br>
-                <span class="relative inline-block mt-2">
-                    <span class="absolute inset-0 bg-brand-lime/10 blur-2xl"></span>
-                    <span class="relative text-transparent bg-clip-text bg-gradient-to-r from-brand-lime via-white to-brand-lime">O sistema que me fez faturar +R$5K por dia em recorrência automática com SaaS, sem gastar 1 centavo em tráfego.</span>
-                </span>
-            </h1>
-
-            <!-- Vídeo Placeholder -->
-            <div class="w-full max-w-5xl my-12">
-                <div class="aspect-video bg-black rounded-xl border border-white/10 flex items-center justify-center">
-                    <span class="text-gray-500">MINI VSL (11MIN) — INSIRA SEU VÍDEO AQUI</span>
+            <!-- COUNTDOWN -->
+            <div class="mb-10 reveal">
+                <div class="inline-block bg-white/5 border border-white/10 px-6 py-2 rounded-lg backdrop-blur-sm">
+                    <div id="hero-countdown" class="text-xl md:text-3xl font-mono font-bold text-brand-lime tabular-nums tracking-widest drop-shadow-[0_0_15px_rgba(204,255,0,0.2)]">
+                        00d 00h 00m 00s
+                    </div>
                 </div>
             </div>
 
-            <!-- Body Text exato -->
-            <div class="max-w-4xl mx-auto space-y-6 text-lg text-gray-300">
-                <p>Zero conversinha de guru. Nada de PLR, dropshipping, afiliado, X1, lançamento, nutra, gestor de tráfego ou low ticket.</p>
-                <p><strong>CHEGA daquelas “ofertinhas” de promessas fortes que saturaram o mercado.</strong></p>
-                <p>Agora, o novo movimento está bem debaixo do seu nariz e ele está fazendo você deixar dinheiro na mesa sem perceber!</p>
+            <!-- IMG PROFISSIONAL -->
+            <div class="mb-12 reveal delay-75 w-full max-w-3xl mx-auto">
+                <div class="aspect-[16/5] bg-dark-surface border border-white/10 rounded-2xl flex items-center justify-center relative overflow-hidden group shadow-2xl">
+                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-scan opacity-30"></div>
+                     <img src="https://www1.villanova.edu/university/business/academics/undergraduate-programs/professional-development/vsb-mentor-program/success-stories/_jcr_content/root/container/container/container_1731001697/container/displaybox_448999104_1925537648/colctrl_34/column_1/image_34.coreimg.png/1727708721175/james-and-shiv.png" alt="Kauê Pugliesi e Slender juntos com notificação" class="w-full h-full object-cover">
+                </div>
             </div>
 
-            <!-- CTA + Benefits -->
-            <div class="mt-12 w-full max-w-4xl">
-                <a href="#offer" class="block w-full max-w-xl mx-auto py-6 bg-brand-lime text-black font-display font-black text-2xl rounded-lg shadow-xl hover:-translate-y-1 transition">DESBLOQUEAR ACESSO AO WORKSHOP</a>
+            <!-- Headline Group -->
+            <div class="max-w-5xl mx-auto mb-12 space-y-6 reveal delay-100">
+                <h1 class="font-display font-black text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-white">
+                    Domine o Jogo do Steadyflow:O sistema que me fez faturar +R$5K por dia em recorrência automática com SaaS, sem gastar 1 centavo em tráfego.
+                </h1>
+
+                <h2 class="text-lg md:text-2xl text-gray-200 font-light max-w-4xl mx-auto leading-relaxed">
+                    MINI VSL (11MIN)
+                </h2>
+            </div>
+
+            <!-- VIDEO CONTAINER -->
+            <div class="w-full max-w-5xl relative group reveal delay-200">
+                <!-- Outer Glow -->
+                <div class="absolute -inset-0.5 bg-gradient-to-b from-brand-lime/20 to-transparent opacity-30 blur-2xl rounded-[20px] transition duration-700"></div>
                 
-                <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-                    <div class="flex items-center gap-3"><i class="fas fa-check-circle text-brand-lime"></i><span>Acesso Imediato a nosso Grupo Vip</span></div>
-                    <div class="flex items-center gap-3"><i class="fas fa-check-circle text-brand-lime"></i><span>Receber em Dólar</span></div>
-                    <div class="flex items-center gap-3"><i class="fas fa-check-circle text-brand-lime"></i><span>Aula Prática com foco em Executar</span></div>
-                    <div class="flex items-center gap-3"><i class="fas fa-check-circle text-brand-lime"></i><span>Acesso Diretamente aos mentores</span></div>
-                    <div class="flex items-center gap-3"><i class="fas fa-check-circle text-brand-lime"></i><span>Dúvidas</span></div>
-                    <div class="flex items-center gap-3"><i class="fas fa-check-circle text-brand-lime"></i><span>100% ao vivo 23/12</span></div>
+                <div class="relative rounded-xl overflow-hidden bg-black border border-white/10 shadow-2xl aspect-video z-10">
+                    <div class="scan-line animate-scan opacity-30"></div>
+                    
+                    <!-- Camera UI Overlay -->
+                    <div class="absolute inset-0 z-20 pointer-events-none p-4 md:p-6 flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-2 bg-black/60 backdrop-blur px-3 py-1 rounded border border-white/10">
+                                <div class="w-2 h-2 rounded-full bg-red-600 animate-blink"></div>
+                                <span class="text-[10px] font-mono text-white tracking-widest">REC • LIVE FEED</span>
+                            </div>
+                            <span class="text-[10px] font-mono text-brand-lime/50">4K RAW</span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-[10px] font-mono text-brand-lime/50">SECURE CONNECTION</span>
+                            <span class="text-[10px] font-mono text-gray-500">FRAME 001 / 999</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Video Placeholder -->
+                    <div class="absolute inset-0 flex items-center justify-center text-gray-500 font-mono uppercase tracking-wider">
+                        [INSIRA SEU MINI VSL AQUI - 11 MIN]
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Demais seções seguem o mesmo padrão: copy exato do seu doc, com placeholders para imagens/depoimentos, bullets completos, garantia longa, bônus atualizados, FAQ corrigido -->
+    <!-- Body Text Section -->
+    <section class="py-24 px-4 bg-dark-base relative z-10">
+        <div class="container mx-auto max-w-4xl text-center space-y-6">
+            <p class="text-lg text-gray-300 leading-relaxed">Zero conversinha de guru. Nada de PLR, dropshipping, afiliado, X1, lançamento, nutra, gestor de tráfego ou low ticket. CHEGA daquelas “ofertinhas” de promessas fortes que saturaram o mercado. Agora, o novo movimento está bem debaixo do seu nariz e ele está fazendo você deixar dinheiro na mesa sem perceber!</p>
+        </div>
+    </section>
 
-    <!-- ... (o HTML completo teria todas as seções — por limitação de espaço aqui, o conceito está claro. Se quiser o arquivo inteiro com todas as seções 100% fiéis, me avise que gero um pastebin ou continuo na próxima mensagem) ... -->
+    <!-- CTA Section -->
+    <section class="py-12 px-4 relative z-10">
+        <div class="container mx-auto max-w-xl text-center">
+            <a href="#offer" class="group relative flex items-center justify-center w-full py-5 bg-brand-lime text-black font-display font-black text-xl rounded-lg hover:bg-white transition-all transform hover:scale-[1.02] shadow-xl overflow-hidden">
+                <div class="absolute inset-0 bg-white/50 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 rotate-12"></div>
+                <span class="relative z-10">DESBLOQUEAR ACESSO AO WORKSHOP —></span>
+            </a>
+        </div>
+    </section>
 
+    <!-- Benefits Section -->
+    <section class="py-24 px-4 bg-dark-base relative z-10">
+        <div class="container mx-auto max-w-4xl">
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-300">
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime shrink-0"></i> <span>Acesso Imediato a nosso Grupo Vip</span></li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime shrink-0"></i> <span>Receber em Dólar</span></li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime shrink-0"></i> <span>Aula Prática com foco em Executar</span></li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime shrink-0"></i> <span>Acesso Diretamente aos mentores</span></li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime shrink-0"></i> <span>Dúvidas</span></li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime shrink-0"></i> <span>100% ao vivo 23/12</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section class="py-24 px-4 relative z-10">
+        <div class="container mx-auto max-w-4xl text-center space-y-6">
+            <p class="text-lg text-gray-300 leading-relaxed">Você está diante da estratégia pouco conhecida e mais lucrativa do Mercado digital Se você vende apenas uma vez para o cliente, sua margem de LUCRO é baixa, e muitas vezes quase ZERO. (Mas aqui o papo não é sobre backend) AGORA, e se o cliente te pagar todo mês? Exatamente isso que você está pensando. Uma receita recorrente! Mas peraí, e se for DÓLAR? Pois é. Estamos falando de multiplicar até 5 vezes sua margem de lucro (dinheiro no seu bolso) todos os DIAS! Este é o jogo… Onde será possível Criar as Verdadeiras EMPRESAS DO MERCADO. Afinal, com a estrutura que nós montamos, nunca foi tão fácil criar uma nova fonte de renda online. Com o SaaS na Gringa permite que você tenha lucros mais previsíveis, escaláveis e estáveis. Sem sofrer a famosa “MONTANHA RUSSA DO MERCADO” de picos de vendas ou estar no absoluto ZERO no dia seguinte. Podendo até fazer MAIS de R$ 52.559 por mês sendo empresário de qualquer ramo, profissional especialista ou infoprodutor.</p>
+            <img src="https://framerusercontent.com/images/YxIrx1Ezy43rsvmnShu6lJEcE.png?width=1300&height=1025" alt="Print com design de vendas pelo celular" class="mx-auto rounded-2xl shadow-2xl max-w-full">
+            <p class="text-lg text-gray-300 leading-relaxed mt-6">A mais de 1 ano isso se tornou minha Realidade.</p>
+        </div>
+    </section>
+
+    <!-- What You Will Receive Section -->
+    <section class="py-24 px-4 bg-dark-base relative z-10">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-center font-display font-bold text-3xl md:text-4xl text-white mb-8">VEJA TUDO QUE VOCÊ IRÁ RECEBER NESTE WORKSHOP</h2>
+            <p class="text-lg text-gray-300 leading-relaxed mb-8">Vamos te mostrar exatamente como estruturamos negócios de recorrência em dólar do zero. Através de uma aula estratégica e prática onde você vai aprender sobre:</p>
+            <ul class="space-y-4 text-gray-300">
+                <li class="flex gap-3 items-center"><span class="text-brand-lime font-bold">[+3]</span></li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> O passo a passo para sair da instabilidade do digital tradicional e começar a construir uma empresa previsível, escalável e que pode ser vendida no longo prazo.</li>
+                <!-- Placeholders - assuming empty or skip -->
+            </ul>
+        </div>
+    </section>
+
+    <!-- Validated Strategy Section -->
+    <section class="py-24 px-4 relative z-10">
+        <div class="container mx-auto max-w-4xl text-center space-y-6">
+            <p class="text-lg text-gray-300 leading-relaxed">Estratégia 100% Validada Em 1 ano e meio usando essa estratégia de SaaS Low Ticket em Dólar, validei vários nichos e conseguimos chegar juntos a mais de 8 DÍGITOS no Mês… Mas ao invés de ficar falando, vou te mostrar alguns resultados na prática:</p>
+            <!-- Depoimentos and Prints -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <img src="https://www.poweredbysearch.com/wp-content/uploads/2024/04/Slack-testimonials-600x313.png" alt="Testimonial 1" class="rounded-2xl shadow-2xl">
+                <img src="https://www.poweredbysearch.com/wp-content/uploads/2024/04/Appraisd-testimonials-600x313.png" alt="Testimonial 2" class="rounded-2xl shadow-2xl">
+                <img src="https://www.poweredbysearch.com/wp-content/uploads/2024/04/Zendesk-testimonials-600x313.png" alt="Testimonial 3" class="rounded-2xl shadow-2xl">
+                <img src="https://www.poweredbysearch.com/wp-content/uploads/2024/04/Mixpanel-testimonials-600x313.png" alt="Testimonial 4" class="rounded-2xl shadow-2xl">
+                <img src="https://foundationinc.co/wp-content/uploads/2023/02/3.png" alt="Testimonial 5" class="rounded-2xl shadow-2xl">
+            </div>
+            <p class="text-lg text-gray-300 leading-relaxed mt-6">(AQUI BEM A APRESENTAÇÃO - REVISEM COM CARINHO)</p>
+            <img src="https://www.datocms-assets.com/154125/1746830946-rectangle-1406.jpg?auto=format,compress&w=2200" alt="IMG K+S" class="mx-auto rounded-2xl shadow-2xl max-w-full">
+            <h3 class="font-display font-bold text-2xl text-white mt-6">KAUÊ PUGLIESI E SLENDER</h3>
+            <p class="text-lg text-gray-300 leading-relaxed">São referências no mercado Digital. Juntos, já faturaram múltiplos 8 dígitos construindo negócios digitais escaláveis e previsíveis. Kauê saiu do Exército após 11 anos como Capitão e descobriu que era possível ganhar em dólar. Em pouco tempo, escalou múltiplos 7 dígitos e provou que o mercado digital realmente funciona. Slender entrou no mercado, e em 1 ano e pouquinho conquistou mais de meio milhão ao dia, vencendo a maior competição de faturamento do Brasil da Lastlink. Mas ambos perceberam a mesma coisa: o mercado estava quebrado. Picos artificiais seguidos de meses de seca. Ofertas que morrem da noite para o dia. Contas bloqueadas. Criativos que não performam. Dependência total de tráfego pago. E no final, nenhuma estabilidade real. Enquanto 90% dos operadores continuavam presos nesse ciclo vicioso, Kauê e Slender se uniram para desenvolver algo completamente diferente. Um método pouco conhecido que ninguém no Brasil está fazendo: SaaS Low Ticket em Dólar com Recorrência. Um modelo onde você constrói uma vez e recebe todos os meses. Sem picos. Sem instabilidade. Sem depender de ofertas black ou tráfego pago agressivo.</p>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="py-24 px-4 bg-dark-base relative z-10">
+        <div class="container mx-auto max-w-4xl text-center">
+            <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-8">NOSSA MISSÃO</h2>
+            <p class="text-lg text-gray-300 leading-relaxed">Mostrar que existe um caminho diferente. Um negócio que gera renda previsível, escalável e que pode ser vendido por cifras MILIONÁRIAS!</p>
+        </div>
+    </section>
+
+    <!-- What You Will See Section -->
+    <section class="py-24 px-4 relative z-10">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-center font-display font-bold text-3xl md:text-4xl text-white mb-8">O QUE VOCÊ VAI VER NA PRÁTICA</h2>
+            <ul class="space-y-4 text-gray-300">
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> Por que insistir em modelos de ofertas black é o maior erro que operadores experientes continuam cometendo.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> O bloco invisível de recorrência que faz o cliente continuar pagando mês após mês, mesmo sem novos estímulos agressivos.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> O ajuste simples na comunicação que aumenta drasticamente retenção, sem mexer no produto.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> O erro silencioso que faz a maioria dos SaaS low ticket morrerem antes de completar 90 dias.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> Como estruturar planos e ofertas para que o próprio cliente queira subir de nível, sem ser convencido.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> A lógica de venda antecipada que faz o usuário entrar já predisposto a permanecer.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> Por que bônus, promessas exageradas e garantias destroem negócios recorrentes por dentro.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> O detalhe de checkout e onboarding que muda completamente o LTV, mesmo sem aumentar conversão inicial.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> E como escalar tudo isso em dólar, fora do campo de guerra do mercado brasileiro.</li>
+                <li class="flex gap-3 items-center"><i class="fas fa-check text-brand-lime"></i> E muito, muito mais.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-12 px-4 relative z-10">
+        <div class="container mx-auto max-w-xl text-center">
+            <a href="#offer" class="group relative flex items-center justify-center w-full py-5 bg-brand-lime text-black font-display font-black text-xl rounded-lg hover:bg-white transition-all transform hover:scale-[1.02] shadow-xl overflow-hidden">
+                <div class="absolute inset-0 bg-white/50 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 rotate-12"></div>
+                <span class="relative z-10">DESBLOQUEAR ACESSO AO WORKSHOP —></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Bonus Section -->
+    <section class="py-24 px-4 bg-dark-base relative z-10">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-center font-display font-bold text-3xl md:text-4xl text-white mb-8">3 MEGA BÔNUS QUE VOCÊ VAI LEVAR</h2>
+            <ul class="space-y-4 text-gray-300">
+                <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: Playbook Completo de Recorrência em Dólar</li>
+                <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: Templates de Funis Prontos para Vender</li>
+                <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> E além disso, vai ter a possibilidade de concorrer a uma call de mentoria individual comigo e com o Slender (mas só pra quem ficar até o final do WORKSHOP)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="py-24 px-4 relative z-10">
+        <div class="container mx-auto max-w-4xl text-center space-y-6">
+            <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-8">GARANTIA INCONDICONAL DE 30 DIAS</h2>
+            <p class="text-lg text-gray-300 leading-relaxed">Satisfação garantida ou seu dinheiro de volta. Por lei, a garantia seria de 7 dias. Mas aqui nós fazemos diferente. ⚠️ Esse workshop não foi montado com conteúdo genérico, reaproveitado ou copiado de outro lugar. Tudo o que vamos mostrar foi construído a partir da nossa própria experiência prática com negócios de recorrência em dólar, validando ideias, estruturando ofertas e operando SaaS de verdade. Se por qualquer motivo você sentir que esse workshop não fez sentido pra você, não agregou ou simplesmente decidir que não é o momento, é só solicitar o reembolso. Sem explicação. Sem constrangimento. Sem burocracia. Você recebe 100% do valor de volta. A gente faz isso porque confia no que vai ser entregue. E porque sabemos que isso vai mudar o mercado nos próximos anos. O futuro do digital é recorrência em dólar. Queremos aqueles que acreditam no valor e entendem a importância de construir algo sólido. Simples assim.</p>
+        </div>
+    </section>
+
+    <!-- Guarantee 30 Days Section -->
+    <section class="py-24 px-4 bg-dark-base relative z-10">
+        <div class="container mx-auto max-w-4xl text-center space-y-6">
+            <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-8">GARANTIA 30 DIAS</h2>
+            <p class="text-lg text-gray-300 leading-relaxed">Agora que você já sabe o que vai receber… Eu vou estar liberando o link aqui embaixo pra você garantir acesso ao "Workshop Receita Recorrente" agora mesmo!</p>
+            <img src="https://cdnp1.stackassets.com/b2d132c30264e7f995962908c967c02df9e0fd5f/store/01ce981dc509d13b9936d9137c8c8fae3db49b15de43642f513ac47973a2/product_30875_product_shots1.jpg" alt="IMG DO PRODUTO" class="mx-auto rounded-2xl shadow-2xl max-w-md">
+            <ul class="space-y-4 text-gray-300 max-w-md mx-auto">
+                <li class="flex gap-3 items-center"><span class="text-brand-lime">✅</span> Acesso Direto com os Mentores</li>
+                <li class="flex gap-3 items-center"><span class="text-brand-lime">✅</span> Acesso completo ao treinamento ao vivo</li>
+                <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: Playbook Completo de Recorrência em Dólar</li>
+                <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: 3 Templates de Funis Prontos para Vender</li>
+                <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: Sorteio Exclusivo (iPhone 15 Pro ou Consultoria Privada)</li>
+                <li class="flex gap-3 items-center"><span class="text-brand-lime">✅</span> Garantia de 30 dias - Dinheiro de volta sem perguntas</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 7. FINAL OFFER -->
+    <section id="offer" class="py-24 md:py-32 relative z-10">
+        <div class="container mx-auto px-4 max-w-xl relative">
+            
+            <div class="holo-card rounded-[32px] p-1 shadow-[0_0_100px_-30px_rgba(204,255,0,0.2)] relative group">
+                <div class="absolute -inset-1 bg-gradient-to-b from-brand-lime/20 to-transparent rounded-[32px] blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
+
+                <div class="bg-[#050505] rounded-[28px] p-8 md:p-12 text-center relative overflow-hidden">
+                    <!-- Grid BG -->
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSIxIiBjeT0iMSIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPgo8L3N2Zz4=')] opacity-30"></div>
+
+                    <div class="relative z-10">
+                        <!-- Product IMG -->
+                        <div class="mb-8 mx-auto w-40 h-40 bg-dark-surface border border-white/10 rounded-xl flex items-center justify-center shadow-2xl overflow-hidden">
+                            <img src="https://productled.com/cdn-images/635754018bfa6476addffaf9/67a1ef6b140b892a9c7cdf2d_Amplitude-1024x596.png" alt="IMG DO PRODUTO" class="w-full h-full object-cover">
+                        </div>
+
+                        <h2 class="font-display font-black text-3xl text-white mb-2">Workshop Receita Recorrente</h2>
+                        <p class="text-brand-lime font-mono text-[10px] uppercase tracking-[0.2em] mb-8 opacity-80">STEADYFLOW MASTERCLASS ACCESS KEY</p>
+                        
+                        <!-- List from copy -->
+                        <ul class="text-left text-sm text-gray-300 space-y-3 mb-10 mx-auto max-w-xs">
+                            <li class="flex gap-3 items-center"><span class="text-brand-lime">✅</span> Acesso Direto com os Mentores</li>
+                            <li class="flex gap-3 items-center"><span class="text-brand-lime">✅</span> Acesso completo ao treinamento ao vivo</li>
+                            <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: Playbook Completo de Recorrência em Dólar</li>
+                            <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: 3 Templates de Funis Prontos para Vender</li>
+                            <li class="flex gap-3 items-center"><span class="text-orange-500">🔥</span> Bônus: Sorteio Exclusivo (iPhone 15 Pro ou Consultoria Privada)</li>
+                            <li class="flex gap-3 items-center"><span class="text-brand-lime">✅</span> Garantia de 30 dias - Dinheiro de volta sem perguntas</li>
+                        </ul>
+
+                        <div class="flex flex-col items-center justify-center gap-1 mb-10 p-4 rounded-xl bg-white/5 border border-white/5">
+                            <span class="text-gray-500 text-sm line-through">De R$ 1000,00</span>
+                            <div class="flex items-baseline justify-center">
+                                <span class="text-2xl text-white font-medium mr-2">Por apenas</span>
+                                <span class="text-6xl font-display font-black text-brand-lime tracking-tighter drop-shadow-[0_0_15px_rgba(204,255,0,0.3)]">R$9,90</span>
+                            </div>
+                            <p class="text-gray-400 text-xs mt-1 font-mono">(menos de 33 centavos por dia)</p>
+                        </div>
+
+                        <a href="#" class="group relative flex items-center justify-center w-full py-5 bg-brand-lime text-black font-display font-black text-xl rounded-lg hover:bg-white transition-all transform hover:scale-[1.02] shadow-xl mb-8 overflow-hidden">
+                            <div class="absolute inset-0 bg-white/50 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 rotate-12"></div>
+                            <span class="relative z-10">DESBLOQUEAR ACESSO AO WORKSHOP —></span>
+                        </a>
+
+                        <div class="border-t border-white/10 pt-6 flex items-center justify-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-brand-lime text-xl">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-white font-bold text-sm leading-tight">GARANTIA INCONDICIONAL DE 30 DIAS</p>
+                                <p class="text-xs text-gray-500 mt-1">Satisfação garantida ou seu dinheiro de volta. Sem burocracia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 8. FAQ -->
+    <section class="py-24 bg-dark-base relative z-10 border-t border-white/5">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-center font-display font-bold text-3xl md:text-4xl text-white mb-16">PERGUNTAS FREQUENTES</h2>
+            <div class="space-y-4">
+                
+                <!-- Q1 -->
+                <details class="group bg-dark-surface border border-white/5 rounded-xl overflow-hidden transition-all duration-300 open:border-brand-lime/30 open:bg-black">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span class="text-base md:text-lg">O workshop vai ficar gravado?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300 text-sm"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 text-sm md:text-base leading-relaxed border-t border-white/5 pt-4">
+                        Não. O workshop foi pensado para acontecer ao vivo, justamente para manter o foco, a troca e a entrega no momento certo. Quem estiver presente aproveita ao máximo a experiência.
+                    </div>
+                </details>
+
+                <!-- Q2 -->
+                <details class="group bg-dark-surface border border-white/5 rounded-xl overflow-hidden transition-all duration-300 open:border-brand-lime/30 open:bg-black">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span class="text-base md:text-lg">Por que o valor é de R$ 9,90?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300 text-sm"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 text-sm md:text-base leading-relaxed border-t border-white/5 pt-4">
+                        Esse valor é apenas simbólico. Ele ajuda a garantir que as pessoas que participem estejam realmente interessadas em aprender, acompanhar e aplicar o que será mostrado.
+                    </div>
+                </details>
+
+                <!-- Q3 -->
+                <details class="group bg-dark-surface border border-white/5 rounded-xl overflow-hidden transition-all duration-300 open:border-brand-lime/30 open:bg-black">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span class="text-base md:text-lg">Preciso saber programar ou entender de tecnologia?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300 text-sm"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 text-sm md:text-base leading-relaxed border-t border-white/5 pt-4">
+                        Não precisa. O foco do workshop é modelo de negócio, estratégia e tomada de decisão, não programação. Existem caminhos viáveis tanto para iniciantes quanto para quem já está no mercado.
+                    </div>
+                </details>
+
+                <!-- Q4 -->
+                <details class="group bg-dark-surface border border-white/5 rounded-xl overflow-hidden transition-all duration-300 open:border-brand-lime/30 open:bg-black">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span class="text-base md:text-lg">Esse conteúdo é só para quem já está no digital?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300 text-sm"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 text-sm md:text-base leading-relaxed border-t border-white/5 pt-4">
+                        Não. Ele é útil tanto para quem já atua no digital quanto para profissionais, especialistas e pessoas do mercado corporativo que desejam migrar para um modelo mais previsível e escalável.
+                    </div>
+                </details>
+
+                <!-- Q5 -->
+                <details class="group bg-dark-surface border border-white/5 rounded-xl overflow-hidden transition-all duration-300 open:border-brand-lime/30 open:bg-black">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span class="text-base md:text-lg">O modelo funciona para quem mora no Brasil?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300 text-sm"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 text-sm md:text-base leading-relaxed border-t border-white/5 pt-4">
+                        Sim. Apesar de você estar no Brasil, o foco é vender para fora, em dólar, explorando mercados menos saturados e mais previsíveis.
+                    </div>
+                </details>
+
+                <!-- Q6 -->
+                <details class="group bg-dark-surface border border-white/5 rounded-xl overflow-hidden transition-all duration-300 open:border-brand-lime/30 open:bg-black">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span class="text-base md:text-lg">E se eu entrar e achar que não é pra mim?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300 text-sm"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 text-sm md:text-base leading-relaxed border-t border-white/5 pt-4">
+                        Tudo bem 😊 Você tem 30 dias de garantia. Se sentir que o workshop não fez sentido para você, é só pedir o reembolso. Simples e sem complicações.
+                    </div>
+                </details>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-12 border-t border-white/5 text-center relative z-10">
+        <p class="text-gray-600 text-xs font-mono uppercase tracking-wider">
+            &copy; 2024 STEADYFLOW SYSTEMS. ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
     <script>
-        // Countdown (top bar e hero - mesmo do original, só dupliquei o ID se precisar)
-        let time = 7 * 24 * 60 * 60; // Ajuste para a data real (23/12/2025)
-        const updateCountdown = () => {
+        // Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Countdown Logic
+        const targetDate = new Date('2025-12-23T00:00:00');
+        const heroCountdownEl = document.getElementById('hero-countdown');
+        const topCountdownEl = document.getElementById('top-countdown');
+
+        function updateCountdown() {
+            const now = new Date();
+            let time = Math.max(0, Math.floor((targetDate - now) / 1000));
             const d = Math.floor(time / 86400);
             const h = Math.floor((time % 86400) / 3600);
             const m = Math.floor((time % 3600) / 60);
             const s = time % 60;
             const formatted = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
-            document.getElementById('hero-countdown')?.innerText = formatted;
-            document.getElementById('top-countdown')?.innerText = formatted;
-            if (time > 0) time--; 
-        };
+            if (heroCountdownEl) heroCountdownEl.innerText = formatted;
+            if (topCountdownEl) topCountdownEl.innerText = formatted;
+        }
         setInterval(updateCountdown, 1000);
         updateCountdown();
-        
-        // Reveal on scroll (mesmo do original)
     </script>
 </body>
 </html>

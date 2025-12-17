@@ -192,7 +192,7 @@
     <div class="orb bg-brand-olive w-[600px] h-[600px] bottom-[20%] right-[-100px] animate-float-delayed"></div>
 
     <!-- TOP NOTIFICATION BAR (Text Only - Separate Copy Part 1) -->
-    <div class="bg-black/90 border-b border-brand-lime/20 backdrop-blur-md sticky top-0 z-50">
+    <div class="bg-black/90 border-b border-brand-lime/20 backdrop-blur-md relative z-50">
         <div class="container mx-auto px-4 py-2.5 flex items-center justify-center text-center">
             <div class="flex items-center justify-center gap-2 text-[10px] md:text-xs font-mono tracking-wide text-gray-300 leading-tight">
                 <span class="flex h-2 w-2 relative shrink-0">
@@ -293,19 +293,70 @@
                 </div>
             </div>
 
-            <!-- CTA -->
-            <div class="mt-12 w-full max-w-sm reveal delay-500">
-                <a href="#offer" class="group relative flex items-center justify-center w-full py-5 bg-brand-lime hover:bg-white text-black font-display font-black text-xl rounded shadow-[0_0_30px_-5px_rgba(204,255,0,0.4)] transition-all duration-300 overflow-hidden">
-                    <span class="relative z-10 flex items-center gap-2 tracking-tight">
+            <!-- CTA SECTION -->
+            <div class="mt-10 w-full max-w-3xl flex flex-col items-center reveal delay-500">
+                
+                <!-- Main Button -->
+                <a href="#offer" class="group relative flex items-center justify-center w-full max-w-xl py-6 bg-brand-lime hover:bg-white text-black font-display font-black text-lg md:text-2xl rounded shadow-[0_0_30px_-5px_rgba(204,255,0,0.4)] transition-all duration-300 overflow-hidden text-center leading-tight">
+                    <span class="relative z-10 flex items-center justify-center gap-2 tracking-tight">
                         DESBLOQUEAR ACESSO AO WORKSHOP
-                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform hidden md:inline-block"></i>
                     </span>
+                    <!-- Glitch/Swipe Effect -->
                     <div class="absolute inset-0 bg-white/40 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-300 rotate-12"></div>
                 </a>
                 
-                <div class="flex justify-center gap-6 mt-6 text-[10px] text-gray-500 font-mono uppercase tracking-widest">
-                    <span class="flex items-center gap-1.5"><i class="fas fa-lock text-brand-lime"></i> SSL Secure</span>
-                    <span class="flex items-center gap-1.5"><i class="fas fa-bolt text-brand-lime"></i> Instant Access</span>
+                <!-- Benefits List (Desktop: Grid / Mobile: List) -->
+                <div class="w-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 text-left max-w-2xl px-4 md:px-0">
+                    
+                    <!-- Item 1 -->
+                    <div class="flex items-center gap-3 text-gray-300">
+                        <div class="w-5 h-5 rounded bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center shrink-0">
+                            <i class="fas fa-check text-xs text-brand-lime"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium">Acesso Imediato a nosso Grupo Vip</span>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex items-center gap-3 text-gray-300">
+                        <div class="w-5 h-5 rounded bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center shrink-0">
+                            <i class="fas fa-check text-xs text-brand-lime"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium">Receber em Dólar</span>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="flex items-center gap-3 text-gray-300">
+                        <div class="w-5 h-5 rounded bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center shrink-0">
+                            <i class="fas fa-check text-xs text-brand-lime"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium">Aula Prática com foco em Executar</span>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="flex items-center gap-3 text-gray-300">
+                        <div class="w-5 h-5 rounded bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center shrink-0">
+                            <i class="fas fa-check text-xs text-brand-lime"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium">Acesso Diretamente aos mentores</span>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="flex items-center gap-3 text-gray-300">
+                        <div class="w-5 h-5 rounded bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center shrink-0">
+                            <i class="fas fa-check text-xs text-brand-lime"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium">Dúvidas</span>
+                    </div>
+
+                    <!-- Item 6 -->
+                    <div class="flex items-center gap-3 text-gray-300">
+                        <div class="w-5 h-5 rounded bg-brand-lime/10 border border-brand-lime/30 flex items-center justify-center shrink-0">
+                            <i class="fas fa-check text-xs text-brand-lime"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-medium">100% ao vivo 23/12</span>
+                    </div>
+
                 </div>
             </div>
 

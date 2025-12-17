@@ -1,50 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steadyflow - Workshop Receita Recorrente</title>
+    <title>Domine o Steadyflow - Workshop Exclusivo</title>
     
-    <!-- Fontes: Inter (Leitura) e JetBrains Mono (Dados/Técnico) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Configuração de Cores e Efeitos -->
+
+    <!-- Custom Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        brand: {
+                            lime: '#CCFF00',      // High Voltage Lime
+                            limeDim: '#9ACD32',
+                            olive: '#3A4A1F',
+                            darkOlive: '#1a220d',
+                            glass: 'rgba(255, 255, 255, 0.03)',
+                        },
+                        dark: {
+                            base: '#030303',      // Deepest Black
+                            surface: '#0A0A0A',   // Slightly Lighter
+                            highlight: '#141414',
+                        }
+                    },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        military: {
-                            950: '#0a0c0a', // Fundo Ultra Dark Olive
-                            900: '#141612', // Painéis
-                            800: '#252920', // Bordas
-                            500: '#4d5e30', // Oliva Médio
-                            accent: '#d9f99d', // Oliva Neon (Highlight)
-                            glow: '#84cc16', // Brilho Intenso
-                        }
                     },
                     animation: {
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'scan': 'scan 4s linear infinite',
-                        'star-move': 'star-move 120s linear infinite', // Adicionado para estrelas
+                        'marquee': 'marquee 40s linear infinite',
+                        'blink': 'blink 1s steps(2) infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out 4s infinite',
+                        'scan': 'scan 3s linear infinite',
+                        'grid-move': 'gridMove 20s linear infinite',
                     },
                     keyframes: {
-                        scan: {
-                            '0%': { backgroundPosition: '0% 0%' },
-                            '100%': { backgroundPosition: '0% 100%' },
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
                         },
-                        'star-move': { // Keyframes para o movimento das estrelas
-                            from: { backgroundPosition: '0 0' },
-                            to: { backgroundPosition: '10000px 10000px' },
+                        blink: {
+                            '0%': { opacity: '1' },
+                            '100%': { opacity: '0' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-20px) scale(1.05)' },
+                        },
+                        scan: {
+                            '0%': { top: '0%', opacity: 0 },
+                            '10%': { opacity: 1 },
+                            '90%': { opacity: 1 },
+                            '100%': { top: '100%', opacity: 0 },
+                        },
+                        gridMove: {
+                            '0%': { transform: 'translateY(0)' },
+                            '100%': { transform: 'translateY(40px)' },
                         }
                     }
                 }
@@ -53,200 +79,470 @@
     </script>
 
     <style>
-        /* Background Tático com Grid */
-        .tactical-grid {
-            background-color: #0a0c0a;
-            background-image: 
-                linear-gradient(rgba(132, 204, 22, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(132, 204, 22, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        
-        /* Efeito de Vidro Militar */
-        .glass-panel {
-            background: rgba(20, 22, 18, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(132, 204, 22, 0.15);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        body {
+            background-color: #030303;
+            color: #e5e5e5;
+            overflow-x: hidden;
         }
 
-        /* Brilho Neon Oliva */
-        .neon-border {
-            box-shadow: 0 0 15px rgba(132, 204, 22, 0.15);
-            border: 1px solid rgba(132, 204, 22, 0.4);
-        }
-
-        .text-glow {
-            text-shadow: 0 0 20px rgba(217, 249, 157, 0.3);
-        }
-
-        /* Starfield background */
-        .starfield {
+        /* DYNAMIC BACKGROUND LAYERS */
+        .tech-grid {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjUiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuMiIvPgogIDxjaXJjbGUgY3g9IjE1MCIgY3k9IjE1MCIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSIyNSIgY3k9IjE3NSIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSIxNzUiIGN5PSIyNSIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSI3NSIgY3k9IjEyNSIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSIxMjUiIGN5PSI3NSIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSI4MCIgY3k9IjIwIiByPSIwLjUiIGZpbGw9IiNmZmYiIG9wYWNpdHk9PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSIxODAiIGN5PSI4MCIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSIyMCIgY3k9IjEyMCIgcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KICA8Y2lyY2xlIGN4PSIxMjAiIGN5PSIxODAigcj0iMC41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz4KPC9zdmc+');
-            background-size: 50px 50px; /* Adjust size for density */
-            animation: star-move 120s linear infinite;
-            z-index: 0; /* Behind content, above body background */
-            opacity: 0.15; /* Subtle */
-            pointer-events: none; /* Ensure it doesn't block clicks */
+            top: 0; left: 0; width: 100%; height: 200%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: top;
+            pointer-events: none;
+            z-index: 0;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
+            animation: gridMove 20s linear infinite;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 50;
+            mix-blend-mode: overlay;
+        }
+
+        /* FLOATING ORBS */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* HOLOGRAPHIC CARD */
+        .holo-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02);
+            transition: all 0.4s ease;
+        }
+        .holo-card:hover {
+            border-color: rgba(204, 255, 0, 0.3);
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        /* RETICLE CORNERS (Camera Effect) */
+        .reticle-tl, .reticle-tr, .reticle-bl, .reticle-br {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: rgba(204, 255, 0, 0.7);
+            pointer-events: none;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+        .group:hover .reticle-tl { top: 5px; left: 5px; }
+        .group:hover .reticle-tr { top: 5px; right: 5px; }
+        .group:hover .reticle-bl { bottom: 5px; left: 5px; }
+        .group:hover .reticle-br { bottom: 5px; right: 5px; }
+        
+        .reticle-tl { top: 15px; left: 15px; border-top: 2px solid; border-left: 2px solid; }
+        .reticle-tr { top: 15px; right: 15px; border-top: 2px solid; border-right: 2px solid; }
+        .reticle-bl { bottom: 15px; left: 15px; border-bottom: 2px solid; border-left: 2px solid; }
+        .reticle-br { bottom: 15px; right: 15px; border-bottom: 2px solid; border-right: 2px solid; }
+
+        /* SCAN LINE */
+        .scan-line {
+            position: absolute;
+            left: 0; width: 100%; height: 2px;
+            background: #CCFF00;
+            box-shadow: 0 0 10px #CCFF00;
+            z-index: 15;
+            opacity: 0.5;
+        }
+
+        /* UTILITIES */
+        ::selection { background-color: #CCFF00; color: #000; }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="tactical-grid text-gray-200 antialiased min-h-screen flex flex-col">
-    <!-- Starfield background layer -->
-    <div class="starfield"></div>
+<body class="antialiased font-sans selection:bg-brand-lime selection:text-black">
 
-    <!-- 1. BARRA DE CONTAGEM REGRESSIVA (TOP BAR) -->
-    <div class="w-full bg-military-900 border-b border-military-800 py-3 px-4 sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-2 text-center">
-            <div class="flex items-center gap-2">
-                <span class="relative flex h-3 w-3">
+    <!-- ATMOSPHERE -->
+    <div class="tech-grid"></div>
+    <div class="noise-overlay"></div>
+    
+    <!-- Floating Ambient Orbs -->
+    <div class="orb bg-brand-lime w-[500px] h-[500px] top-0 left-[-100px] animate-float"></div>
+    <div class="orb bg-brand-olive w-[600px] h-[600px] bottom-[20%] right-[-100px] animate-float-delayed"></div>
+
+    <!-- TOP NOTIFICATION BAR (Text Only - Separate Copy Part 1) -->
+    <div class="bg-black/90 border-b border-brand-lime/20 backdrop-blur-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2.5 flex items-center justify-center text-center">
+            <div class="flex items-center justify-center gap-2 text-[10px] md:text-xs font-mono tracking-wide text-gray-300 leading-tight">
+                <span class="flex h-2 w-2 relative shrink-0">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                 </span>
-                <span class="text-xs md:text-sm font-bold tracking-wider text-white uppercase">ATENÇÃO: A CALL EXCLUSIVA PARA INFOPRODUTORES, EMPRESÁRIOS DIGITAIS OU PROFISSIONAIS ESPECIALISTAS COMEÇA EM:</span>
-            </div>
-            <div class="font-mono text-military-accent font-bold text-sm md:text-base bg-military-800 px-3 py-1 rounded border border-military-500/30">
-                00dias 04hrs 12mins 45segs
+                <span>
+                    <strong class="text-brand-lime">ATENÇÃO:</strong> A CALL EXCLUSIVA PARA INFOPRODUTORES, EMPRESÁRIOS DIGITAIS OU PROFISSIONAIS ESPECIALISTAS
+                </span>
             </div>
         </div>
     </div>
 
-    <!-- HERO SECTION -->
-    <section class="relative pt-12 pb-24 px-4 overflow-hidden">
-        
-        <!-- Luz de Fundo (Ambient Light) -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-military-glow opacity-10 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <div class="max-w-4xl mx-auto relative z-10 flex flex-col items-center text-center">
-
-            <!-- 2. IMAGEM PROFISSIONAL (MENTORES) -->
-            <!-- Placeholder estilizado como um "Badge de Acesso" ou Notificação -->
-            <div class="mb-10 animate-fade-in-up">
-                <div class="glass-panel p-2 pr-6 rounded-full inline-flex items-center gap-4 hover:border-military-accent/50 transition-colors cursor-default">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-military-500 to-military-900 border border-military-accent/30 flex items-center justify-center overflow-hidden">
-                        <!-- Imagem gerada de exemplo para Kauê + Slender -->
-                        <img src="https://via.placeholder.com/100x100/304728/D9F99D?text=K+%26+S" alt="Kauê e Slender" class="w-full h-full object-cover opacity-80">
-                    </div>
-                    <div class="text-left">
-                        <p class="text-[10px] text-military-accent font-mono uppercase tracking-widest">Mentores Confirmados</p>
-                        <p class="text-sm font-bold text-white">Kauê Pugliesi & Slender</p>
+    <!-- 1. HERO SECTION -->
+    <header class="relative pt-4 pb-32 px-4 overflow-hidden z-10">
+        <div class="relative max-w-6xl mx-auto w-full flex flex-col items-center text-center">
+            
+            <!-- SEPARATE COUNTDOWN (Copy Part 2) -->
+            <div class="mb-8 reveal">
+                <div class="flex flex-col items-center gap-2">
+                    <span class="text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] text-gray-400">Começa Em:</span>
+                    <div id="hero-countdown" class="text-xl md:text-3xl font-mono font-bold text-brand-lime tabular-nums tracking-widest drop-shadow-[0_0_10px_rgba(204,255,0,0.3)]">
+                        00d 04h 12m 45s
                     </div>
                 </div>
             </div>
 
-            <!-- 3. HEADLINE -->
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight mb-8 drop-shadow-2xl">
-                Domine o Jogo do <span class="text-transparent bg-clip-text bg-gradient-to-r from-military-accent to-military-glow text-glow">Steadyflow</span>
+            <!-- Mentors Pill -->
+            <div class="mb-10 reveal delay-75">
+                <div class="inline-flex items-center gap-3 pl-1 pr-5 py-1.5 rounded-full border border-white/10 bg-black/40 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-brand-lime/30 transition duration-500 cursor-default group">
+                    <div class="flex -space-x-3 transition-spacing duration-300 group-hover:-space-x-1">
+                        <img class="w-9 h-9 rounded-full border-2 border-black bg-gray-800" src="https://placehold.co/100x100/333/ccc?text=K" alt="Kauê">
+                        <img class="w-9 h-9 rounded-full border-2 border-black bg-gray-800" src="https://placehold.co/100x100/444/ddd?text=S" alt="Slender">
+                    </div>
+                    <div class="text-left flex flex-col justify-center h-full pl-1">
+                        <span class="text-[9px] text-brand-lime font-mono uppercase tracking-wider leading-none mb-1">Instrutores</span>
+                        <span class="text-xs text-white font-bold leading-none tracking-wide">Kauê & Slender</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="font-display font-black text-5xl md:text-7xl lg:text-8xl leading-[0.9] tracking-tighter text-white mb-8 reveal delay-100 z-10">
+                Domine o Jogo do <br>
+                <span class="relative inline-block">
+                    <span class="absolute inset-0 bg-brand-lime/10 blur-xl"></span>
+                    <span class="relative text-transparent bg-clip-text bg-gradient-to-r from-brand-lime via-white to-brand-lime bg-[length:200%_auto] animate-marquee">Steadyflow</span>
+                </span>
             </h1>
-            
-            <p class="text-xl md:text-2xl text-gray-300 font-light max-w-3xl mx-auto mb-12 leading-relaxed">
-                O sistema que me fez faturar <strong class="text-white border-b border-military-accent/50">+R$5K por dia</strong> em recorrência automática com SaaS, sem gastar 1 centavo em tráfego.
+
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-16 reveal delay-200">
+                O sistema que me fez faturar <span class="text-white font-bold px-1">+R$5K/dia</span> em recorrência automática com SaaS, sem gastar 1 centavo em tráfego.
             </p>
 
-            <!-- 4. MINI VSL (11 MIN) -->
-            <div class="w-full max-w-3xl relative group mb-12">
-                <!-- Efeito de Glow atrás do vídeo -->
-                <div class="absolute -inset-1 bg-gradient-to-r from-military-500 to-military-glow rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+            <!-- SURVEILLANCE VIDEO CONTAINER -->
+            <div class="w-full max-w-4xl relative group reveal delay-300">
+                <!-- Glowing Backlight -->
+                <div class="absolute -inset-1 bg-gradient-to-b from-brand-lime/20 to-transparent opacity-20 blur-2xl rounded-[20px] group-hover:opacity-40 transition duration-700"></div>
                 
-                <div class="relative glass-panel rounded-xl overflow-hidden aspect-video border border-military-500/50 shadow-2xl">
-                    <!-- Header do Player -->
-                    <div class="absolute top-0 left-0 right-0 h-10 bg-black/40 flex items-center justify-between px-4 border-b border-white/5 z-20">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                            <span class="text-[10px] font-mono text-military-accent uppercase">REC</span>
+                <div class="relative rounded-xl overflow-hidden bg-black border border-white/10 shadow-2xl aspect-video z-10">
+                    
+                    <!-- Scan Line Animation -->
+                    <div class="scan-line animate-scan"></div>
+
+                    <!-- Camera UI Overlay -->
+                    <div class="absolute inset-0 z-20 pointer-events-none p-4 md:p-8 flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-2 bg-black/60 backdrop-blur px-3 py-1.5 rounded border border-white/5">
+                                <div class="w-2 h-2 rounded-full bg-red-600 animate-blink"></div>
+                                <span class="text-[10px] font-mono text-white tracking-widest">REC</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="text-[10px] font-mono text-brand-lime">ISO 800</span>
+                                <span class="text-[10px] font-mono text-white/40">4K RAW</span>
+                            </div>
                         </div>
-                        <div class="flex gap-1">
-                            <div class="w-2 h-2 rounded-full bg-white/20"></div>
-                            <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-[10px] font-mono text-brand-lime">STEADYFLOW_SYS_V2.0</span>
+                            <span class="text-[10px] font-mono text-white/50">TC: 00:11:43:12</span>
                         </div>
                     </div>
+                    
+                    <!-- Animated Reticles -->
+                    <div class="reticle-tl"></div>
+                    <div class="reticle-tr"></div>
+                    <div class="reticle-bl"></div>
+                    <div class="reticle-br"></div>
 
-                    <!-- Placeholder da Imagem do Vídeo (Capa) -->
-                    <div class="absolute inset-0 bg-military-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
-                        <!-- Ícone de Play -->
-                        <div class="w-20 h-20 rounded-full bg-military-accent/90 flex items-center justify-center pl-1 shadow-[0_0_30px_rgba(217,249,157,0.4)] cursor-pointer hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8 text-military-950" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
+                    <!-- Video Content -->
+                    <div class="absolute inset-0 flex items-center justify-center bg-dark-highlight group-hover:scale-[1.01] transition duration-700">
+                        <img src="https://placehold.co/1200x675/050505/222?text=..." class="w-full h-full object-cover opacity-50 mix-blend-screen">
+                        
+                        <!-- Play Button -->
+                        <button class="absolute z-30 w-20 h-20 md:w-24 md:h-24 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full flex items-center justify-center pl-1 transition transform group-hover:scale-110 group-hover:bg-brand-lime group-hover:border-transparent group-hover:shadow-[0_0_50px_rgba(204,255,0,0.6)]">
+                            <i class="fas fa-play text-white text-3xl group-hover:text-black transition-colors"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 5. COPY "ANTI-GURU" -->
-            <div class="max-w-3xl mx-auto text-left md:text-center space-y-6 mb-12">
-                <div class="h-px w-24 bg-military-500/50 mx-auto mb-6"></div>
+            <!-- CTA -->
+            <div class="mt-12 w-full max-w-sm reveal delay-500">
+                <a href="#offer" class="group relative flex items-center justify-center w-full py-5 bg-brand-lime hover:bg-white text-black font-display font-black text-xl rounded shadow-[0_0_30px_-5px_rgba(204,255,0,0.4)] transition-all duration-300 overflow-hidden">
+                    <span class="relative z-10 flex items-center gap-2 tracking-tight">
+                        DESBLOQUEAR ACESSO AO WORKSHOP
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                    <div class="absolute inset-0 bg-white/40 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-300 rotate-12"></div>
+                </a>
                 
-                <p class="text-gray-400 text-lg leading-relaxed">
-                    <span class="text-white font-semibold">Zero conversinha de guru.</span> Nada de PLR, dropshipping, afiliado, X1, lançamento, nutra, gestor de tráfego ou low ticket.
-                </p>
-                
-                <p class="text-gray-400 text-lg leading-relaxed">
-                    CHEGA daqueles <span class="italic text-gray-300">“ofertinhas”</span> de promessas fortes que saturaram o mercado.
-                </p>
-                
-                <p class="text-white text-xl font-medium leading-relaxed border-l-4 border-military-accent pl-4 md:pl-0 md:border-l-0">
-                    Agora, o novo movimento está bem debaixo do seu nariz e ele está fazendo você deixar dinheiro na mesa sem perceber!
-                </p>
+                <div class="flex justify-center gap-6 mt-6 text-[10px] text-gray-500 font-mono uppercase tracking-widest">
+                    <span class="flex items-center gap-1.5"><i class="fas fa-lock text-brand-lime"></i> SSL Secure</span>
+                    <span class="flex items-center gap-1.5"><i class="fas fa-bolt text-brand-lime"></i> Instant Access</span>
+                </div>
             </div>
 
-            <!-- 6. CTA BUTTON -->
-            <div class="w-full md:w-auto">
-                <button class="group relative w-full md:w-auto flex flex-col items-center justify-center bg-military-accent hover:bg-white text-military-950 font-bold py-5 px-12 rounded-lg transition-all duration-300 shadow-[0_0_20px_rgba(132,204,22,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transform hover:-translate-y-1">
-                    <span class="flex items-center gap-3 text-lg md:text-xl tracking-wide uppercase">
-                        DESBLOQUEAR ACESSO AO WORKSHOP
-                        <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="text-[10px] font-mono mt-1 opacity-80 tracking-widest">ACESSO IMEDIATO • VAGAS LIMITADAS</span>
-                </button>
+        </div>
+    </header>
 
-                <!-- Informações adicionais abaixo do botão -->
-                <div class="mt-8 text-center text-sm text-gray-400 font-light space-y-2">
-                    <p class="flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-military-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Acesso Imediato a nosso Grupo Vip
-                    </p>
-                    <p class="flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-military-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Receber em Dólar
-                    </p>
-                    <p class="flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-military-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Aula Prática com foco em Executar
-                    </p>
-                    <p class="flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-military-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Acesso Diretamente aos mentores
-                    </p>
-                    <p class="flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-military-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Dúvidas
-                    </p>
-                    <p class="flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4 text-military-accent" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        100% ao vivo 23/12
-                    </p>
+    <!-- 2. "WHAT IS IT" (Interactive Bento Grid) -->
+    <section class="py-24 relative z-10">
+        <div class="container mx-auto px-4 max-w-6xl">
+            
+            <div class="grid md:grid-cols-12 gap-6">
+                
+                <!-- Text Block -->
+                <div class="md:col-span-5 flex flex-col justify-center space-y-8 reveal">
+                    <h2 class="font-display font-bold text-4xl text-white leading-tight">
+                        A nova era do <br>
+                        <span class="text-gray-600">Digital Marketing.</span>
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition cursor-default">
+                            <div class="w-10 h-10 rounded-lg bg-brand-lime/10 flex items-center justify-center text-brand-lime shrink-0">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-bold text-sm">Anti-Guru</h3>
+                                <p class="text-gray-500 text-xs mt-1 leading-relaxed">Sem promessas falsas. Apenas engenharia reversa de funis que funcionam.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition cursor-default">
+                            <div class="w-10 h-10 rounded-lg bg-brand-lime/10 flex items-center justify-center text-brand-lime shrink-0">
+                                <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-bold text-sm">Renda em Dólar</h3>
+                                <p class="text-gray-500 text-xs mt-1 leading-relaxed">Crie ativos digitais que vendem para o mundo todo, 24/7.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Visuals -->
+                <div class="md:col-span-7 grid grid-cols-2 gap-4 reveal delay-100">
+                    <!-- Main Card -->
+                    <div class="col-span-2 holo-card p-6 rounded-2xl flex items-center justify-between group">
+                        <div>
+                            <p class="text-gray-400 text-[10px] font-mono uppercase tracking-widest mb-2">Daily Revenue</p>
+                            <p class="text-3xl md:text-4xl font-mono font-bold text-white group-hover:text-brand-lime transition-colors">$ 1,240.50</p>
+                        </div>
+                        <div class="h-12 w-24 relative">
+                             <!-- Simple CSS Graph -->
+                             <div class="flex items-end justify-between h-full w-full gap-1">
+                                 <div class="w-full bg-brand-lime/20 h-[40%] rounded-sm group-hover:bg-brand-lime transition-colors duration-300 delay-75"></div>
+                                 <div class="w-full bg-brand-lime/20 h-[60%] rounded-sm group-hover:bg-brand-lime transition-colors duration-300 delay-100"></div>
+                                 <div class="w-full bg-brand-lime/20 h-[30%] rounded-sm group-hover:bg-brand-lime transition-colors duration-300 delay-150"></div>
+                                 <div class="w-full bg-brand-lime/20 h-[80%] rounded-sm group-hover:bg-brand-lime transition-colors duration-300 delay-200"></div>
+                                 <div class="w-full bg-brand-lime/20 h-[100%] rounded-sm group-hover:bg-brand-lime transition-colors duration-300 delay-300"></div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Small Card 1 -->
+                    <div class="holo-card p-6 rounded-2xl aspect-square flex flex-col justify-center items-center text-center group cursor-default">
+                        <div class="w-12 h-12 rounded-full bg-brand-lime flex items-center justify-center text-black text-xl mb-4 shadow-[0_0_20px_rgba(204,255,0,0.4)] group-hover:scale-110 transition-transform">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <p class="text-white font-bold text-sm">Network</p>
+                        <p class="text-gray-500 text-[10px] font-mono mt-1">ELITE MEMBERS</p>
+                    </div>
+
+                    <!-- Small Card 2 -->
+                    <div class="holo-card p-6 rounded-2xl aspect-square flex flex-col justify-center items-center text-center group cursor-default">
+                        <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-xl mb-4 group-hover:bg-brand-lime group-hover:text-black transition-colors">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <p class="text-white font-bold text-sm">Auto-Pilot</p>
+                        <p class="text-gray-500 text-[10px] font-mono mt-1">100% HANDS OFF</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. MENTORS (Clean & Glossy) -->
+    <section class="py-24 relative z-10">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <div class="holo-card rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                <!-- Radial Highlight -->
+                <div class="absolute -top-[200px] -right-[200px] w-[500px] h-[500px] bg-brand-lime/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row gap-12 items-center relative z-10">
+                    <div class="w-full md:w-5/12">
+                        <div class="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl rotate-2 hover:rotate-0 transition duration-500 group">
+                            <div class="absolute inset-0 bg-brand-lime/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition"></div>
+                            <img src="https://placehold.co/600x800/151515/333?text=Mentors" class="w-full grayscale group-hover:grayscale-0 transition duration-700">
+                        </div>
+                    </div>
+                    
+                    <div class="w-full md:w-7/12 space-y-8">
+                        <div>
+                            <span class="text-brand-lime font-mono text-xs uppercase tracking-widest">Architects</span>
+                            <h2 class="font-display font-bold text-4xl text-white mt-2">Quem comanda o jogo?</h2>
+                        </div>
+                        
+                        <div class="grid gap-6">
+                            <div class="group">
+                                <h3 class="text-xl font-bold text-white group-hover:text-brand-lime transition">Kauê Pugliesi</h3>
+                                <p class="text-gray-400 text-sm mt-1 leading-relaxed">Especialista em arquitetura de funis. Responsável por sistemas de vendas que já geraram múltiplos 7 dígitos.</p>
+                            </div>
+                            <div class="w-full h-px bg-white/5"></div>
+                            <div class="group">
+                                <h3 class="text-xl font-bold text-white group-hover:text-brand-lime transition">Slender</h3>
+                                <p class="text-gray-400 text-sm mt-1 leading-relaxed">Mestre do tráfego orgânico e viralização. Criador da metodologia "Zero Ad Spend".</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. FINAL OFFER (Cyber Interface) -->
+    <section id="offer" class="py-24 relative z-10">
+        <div class="container mx-auto px-4 max-w-xl relative">
+            
+            <div class="holo-card rounded-[30px] p-1 shadow-[0_0_100px_-30px_rgba(204,255,0,0.3)] relative group">
+                <!-- Outer Glow -->
+                <div class="absolute -inset-1 bg-gradient-to-b from-brand-lime/30 to-transparent rounded-[32px] blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+
+                <div class="bg-[#050505] rounded-[28px] p-8 md:p-12 text-center relative overflow-hidden">
+                    <!-- Background Grid inside card -->
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSIxIiBjeT0iMSIgcj0iMSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPgo8L3N2Zz4=')] opacity-30"></div>
+
+                    <div class="relative z-10">
+                        <div class="inline-block px-3 py-1 rounded bg-brand-lime/10 border border-brand-lime/20 text-brand-lime font-mono text-[10px] uppercase tracking-widest mb-6">
+                            Lote Promocional
+                        </div>
+
+                        <h2 class="font-display font-black text-4xl text-white mb-2">STEADYFLOW</h2>
+                        <p class="text-gray-500 text-xs font-mono uppercase tracking-widest mb-10">MASTERCLASS ACCESS KEY</p>
+                        
+                        <div class="flex flex-col items-center justify-center gap-2 mb-10">
+                            <span class="text-gray-600 text-sm line-through">De R$ 1000,00</span>
+                            <div class="flex items-start justify-center">
+                                <span class="text-3xl text-white font-medium mr-2 mt-2">R$</span>
+                                <span class="text-7xl font-display font-black text-brand-lime tracking-tighter drop-shadow-[0_0_15px_rgba(204,255,0,0.3)]">9,90</span>
+                            </div>
+                            <p class="text-gray-400 text-xs mt-2">Pagamento único • Acesso vitalício</p>
+                        </div>
+
+                        <a href="#" class="group relative flex items-center justify-center w-full py-5 bg-brand-lime text-black font-display font-black text-xl rounded hover:bg-white transition-all transform hover:scale-[1.02] shadow-xl mb-8 overflow-hidden">
+                            <div class="absolute inset-0 bg-white/50 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 rotate-12"></div>
+                            <span class="relative z-10">COMPRAR AGORA</span>
+                        </a>
+
+                        <div class="border-t border-white/5 pt-6 flex justify-between items-center text-[10px] text-gray-500 font-mono">
+                            <span class="flex items-center gap-1"><i class="fas fa-shield-alt"></i> 7-DAY GUARANTEE</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-lock"></i> 256-BIT ENCRYPTION</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Script Simples para o Timer (Visual) -->
+    <!-- 5. FAQ (Minimalist) -->
+    <section class="py-24 bg-dark-base relative z-10 border-t border-white/5">
+        <div class="container mx-auto px-4 max-w-2xl">
+            <h2 class="text-center font-display font-bold text-3xl text-white mb-12">System FAQ</h2>
+            <div class="space-y-3">
+                <details class="group bg-dark-highlight border border-white/5 rounded overflow-hidden transition-all duration-300 open:border-brand-lime/30">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span>Serve para iniciantes?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300"></i>
+                    </summary>
+                    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4 animate-fade-in">
+                        Sim. A metodologia foi desenhada para sair do zero absoluto até a primeira venda recorrente.
+                    </div>
+                </details>
+                <details class="group bg-dark-highlight border border-white/5 rounded overflow-hidden transition-all duration-300 open:border-brand-lime/30">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span>Preciso ter produto?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300"></i>
+                    </summary>
+                    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        Não. Ensinamos como criar ou licenciar produtos SaaS white-label.
+                    </div>
+                </details>
+                <details class="group bg-dark-highlight border border-white/5 rounded overflow-hidden transition-all duration-300 open:border-brand-lime/30">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer text-white font-medium hover:bg-white/5 transition select-none">
+                        <span>Como acesso?</span>
+                        <i class="fas fa-plus text-brand-lime/50 group-open:rotate-45 transition-transform duration-300"></i>
+                    </summary>
+                    <div class="px-5 pb-5 text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        Acesso imediato enviado para seu e-mail logo após a confirmação do pagamento.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-10 border-t border-white/5 text-center relative z-10">
+        <p class="text-gray-600 text-xs font-mono">
+            &copy; 2024 STEADYFLOW SYSTEMS. ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
     <script>
-        // Apenas para efeito visual de contagem regressiva
-        let seconds = 45;
-        let minutes = 12;
+        // Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Countdown Logic (Hero)
+        // Starting at 0 days, 4 hours, 12 minutes, 45 seconds to match the vibe
+        let time = 4 * 60 * 60 + 12 * 60 + 45; 
+        
+        const countdownEl = document.getElementById('hero-countdown');
+        
         setInterval(() => {
-            seconds--;
-            if (seconds < 0) {
-                seconds = 59;
-                minutes--;
-            }
-            // Em um cenário real, você conectaria isso a uma data real
+            const d = Math.floor(time / (3600 * 24)); // Calculate days
+            const h = Math.floor((time % (3600 * 24)) / 3600);
+            const m = Math.floor((time % 3600) / 60);
+            const s = time % 60;
+            
+            // Format: 00d 00h 00m 00s
+            countdownEl.innerText = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+            
+            if (time > 0) time--; else time = 15165; // Reset loop
         }, 1000);
     </script>
 </body>
